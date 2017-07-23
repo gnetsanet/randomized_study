@@ -97,6 +97,8 @@ baselineOnly$Color = "black"
 baselineOnly$Color[baselineOnly$Gender=="Female"]="green"
 baselineOnly$Color[baselineOnly$Gender=="Male"]="purple"
 plot(baselineOnly$`LDL-C`, baselineOnly$`Total-C`, xlab="LDL-C", ylab="Total-C", col=baselineOnly$Color)
-abline(lm(baselineOnly$`Total-C`~baselineOnly$`LDL-C`), col="red")
+fit <- lm(`Total-C`~ `LDL-C`, data=baselineOnly)
+abline(fit, col="red")
 legend("bottomright", pch=c(1,1), col=c("purple", "green"), c("Male", "Female"), bty="o", cex=.7)
+mtext(paste("Coef:",round(coef(fit)[[2]],2)), 3, -1)
 
