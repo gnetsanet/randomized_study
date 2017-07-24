@@ -134,3 +134,17 @@ samples<-factor(c(rep(head(treat_diff_ldlc_followup_base[order(treat_diff_ldlc_f
 # Build a data frame that I will be plotting shortly via ggplot2
 topdiff.dat <- data.frame(Samples = samples, Group = factor( c(rep("Treatment", 10),rep("Control",10))), Timepoint = factor(rep(c("Baseline", "Followup"),10)), LDLC = c(treatment_baseline_followup_LDLC, control_baseline_followup_LDLC))
 ggplot(data=topdiff.dat, aes(x=Timepoint, y=LDLC, group=samples, colour=Group)) + geom_line() + geom_point()
+
+## Follow-up data
+
+## End of discussion on the follow-up data
+
+## Quantiles - Percentile table
+
+percentile_tab<-NULL # Initialize would be matrix that will hold percentile data
+for (i in 7:12) { 
+  percentile_tab<-cbind(percentile_tab,as.matrix(quantile(allData[,i], c(0.05,0.10,0.25,0.5,0.75,0.9,0.95))))
+}
+
+colnames(percentile_tab)<-factor(colnames(allData)[7:12])
+formattable(as.data.frame(percentile_tab))
