@@ -102,3 +102,10 @@ abline(fit, col="red")
 legend("bottomright", pch=c(1,1), col=c("purple", "green"), c("Male", "Female"), bty="o", cex=.7)
 mtext(paste("Coef:",round(coef(fit)[[2]],2)), 3, -1)
 
+#################
+allData <- setDF(rawdata)
+treatmentData <- subset(allData, Group=="Treatment")
+diff_ldlc_followup_base <- aggregate(treatmentData$`LDL-C`,by=list(treatmentData$PatientId), FUN=function(x) { return(x[2] - x[1])})
+colnames(diff_ldlc_followup_base)<-c("Treatment","Change-LDL-C")
+head(diff_ldlc_followup_base[order(diff_ldlc_followup_base$`Change-LDL-C`),],5)
+
