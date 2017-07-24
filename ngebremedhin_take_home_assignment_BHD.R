@@ -105,7 +105,32 @@ mtext(paste("Coef:",round(coef(fit)[[2]],2)), 3, -1)
 #################
 allData <- setDF(rawdata)
 treatmentData <- subset(allData, Group=="Treatment")
-diff_ldlc_followup_base <- aggregate(treatmentData$`LDL-C`,by=list(treatmentData$PatientId), FUN=function(x) { return(x[2] - x[1])})
-colnames(diff_ldlc_followup_base)<-c("Treatment","Change-LDL-C")
-head(diff_ldlc_followup_base[order(diff_ldlc_followup_base$`Change-LDL-C`),],5)
+treat_diff_ldlc_followup_base <- aggregate(treatmentData$`LDL-C`,by=list(treatmentData$PatientId), FUN=function(x) { return(x[2] - x[1])})
+colnames(treat_diff_ldlc_followup_base)<-c("Treatment","Change-LDL-C")
+# print (show) these in the R-markdown
+head(treat_diff_ldlc_followup_base[order(treat_diff_ldlc_followup_base$`Change-LDL-C`),],5)
 
+treatment_baseline_followup_LDLC<-vector()
+for (i in as.vector(head(treat_diff_ldlc_followup_base[order(treat_diff_ldlc_followup_base$`Change-LDL-C`),],5)[,1])) {
+  treatment_baseline_followup_LDLC<-c(treatment_baseline_followup_LDLC, allData[allData$PatientId==i & allData$TimePoint==0,8])
+  treatment_baseline_followup_LDLC<-c(treatment_baseline_followup_LDLC, allData[allData$PatientId==i & allData$TimePoint==1,8])
+}
+
+controlData <- subset(allData, Group=="Control")
+control_diff_ldlc_followup_base <- aggregate(controlData$`LDL-C`,by=list(controlData$PatientId), FUN=function(x) { return(x[2] - x[1])})
+colnames(control_diff_ldlc_followup_base)<-c("Treatment","Change-LDL-C")
+# print (show) these in the R-markdown
+head(control_diff_ldlc_followup_base[order(control_diff_ldlc_followup_base$`Change-LDL-C`),],5)
+
+control_baseline_followup_LDLC<-vector()
+for (i in as.vector(head(control_diff_ldlc_followup_base[order(control_diff_ldlc_followup_base$`Change-LDL-C`),],5)[,1])) {
+  control_baseline_followup_LDLC<-c(control_baseline_followup_LDLC, allData[allData$PatientId==i & allData$TimePoint==0,8])
+  control_baseline_followup_LDLC<-c(control_baseline_followup_LDLC, allData[allData$PatientId==i & allData$TimePoint==1,8])
+}
+
+# List of samples, each listed two times as factor. Example PID00842 PID00842 PID00679 PID00679
+samples<-factor(c(rep(head(treat_diff_ldlc_followup_base[order(treat_diff_ldlc_followup_base$`Change-LDL-C`),],5)[,1],each=2),rep(head(control_diff_ldlc_followup_base[order(control_diff_ldlc_followup_base$`Change-LDL-C`),],5)[,1],each=2)))
+
+# Build a data frame that I will be plotting shortly via ggplot2
+topdiff.dat <- data.frame(Samples = samples, Group = factor( c(rep("Treatment", 10),rep("Control",10))), Timepoint = factor(rep(c("Baseline", "Followup"),10)), LDLC = c(treatment_baseline_followup_LDLC, control_baseline_followup_LDLC))
+ggplot(data=topdiff.dat, aes(x=timepoint, y=LDLC, group=samples, colour=Group)) + geom_line() + geom_point()
