@@ -133,4 +133,4 @@ samples<-factor(c(rep(head(treat_diff_ldlc_followup_base[order(treat_diff_ldlc_f
 
 # Build a data frame that I will be plotting shortly via ggplot2
 topdiff.dat <- data.frame(Samples = samples, Group = factor( c(rep("Treatment", 10),rep("Control",10))), Timepoint = factor(rep(c("Baseline", "Followup"),10)), LDLC = c(treatment_baseline_followup_LDLC, control_baseline_followup_LDLC))
-ggplot(data=topdiff.dat, aes(x=timepoint, y=LDLC, group=samples, colour=Group)) + geom_line() + geom_point()
+ggplot(data=topdiff.dat, aes(x=Timepoint, y=LDLC, group=samples, colour=Group)) + geom_line() + geom_point()
