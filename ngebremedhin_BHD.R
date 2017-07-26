@@ -148,3 +148,18 @@ for (i in 7:12) {
 
 colnames(percentile_tab)<-factor(colnames(allData)[7:12])
 formattable(as.data.frame(percentile_tab))
+
+## Linear Regression and Feature Selection
+
+prediction_mod<-lm(`LDL-C` ~., data = allData)
+## End of Regression and Feature Selection
+
+# R Package
+library("devtools")
+library("roxygen2")
+
+# Note to self, it is not like RStudo comes with 'devtools' and 'roxygen2' pre-installed, I had to do the following
+#   sudo apt-get install  libssl-dev
+#   sudo apt-get install libcurl
+#   sudo apt-get install libcurl4-openssl-dev
+#   sudo apt-get install libxml2-dev
